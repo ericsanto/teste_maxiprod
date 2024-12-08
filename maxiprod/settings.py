@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'rest_framework',
-    'person',
     'financial_transaction',
 ]
 
