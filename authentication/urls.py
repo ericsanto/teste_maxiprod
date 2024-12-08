@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -5,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from .views import RegisterView
+from .views import RegisterView, UserListAPIView 
 
 urlpatterns = [
     path("authentication/register/", RegisterView.as_view(), name="register"),
@@ -25,4 +26,6 @@ urlpatterns = [
         TokenVerifyView.as_view(),
         name="authentication_verify_token",
     ),
+    
+    path('users/all/', UserListAPIView.as_view(), name='users_all')
 ]
