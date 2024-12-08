@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import choices
 from django.utils.regex_helper import Choice
-
+from authentication.models import UserCustom
 
 EXPENSE_CATEGORIES = (
         ('ACADEMIA', 'ACADEMIA'),
@@ -23,7 +23,7 @@ MATHODS_PAYMENT = (
         )
 
 class FinancialTransaction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(UserCustom, on_delete=models.CASCADE, blank=True)
     methods_payment = models.CharField(choices=MATHODS_PAYMENT, max_length=255)
     expenses_category = models.CharField(choices=EXPENSE_CATEGORIES, max_length=255)
     expense = models.DecimalField(max_digits=10, decimal_places=2)
