@@ -1,4 +1,5 @@
 from re import A
+from django.contrib.auth import get_user_model
 from django.db.models import query
 from django.shortcuts import render
 from rest_framework import generics
@@ -11,5 +12,5 @@ class RegisterView(generics.CreateAPIView):
 
 
 class UserListAPIView(generics.ListAPIView):
-    queryset = UserCustom.objects.all()
-    serializer_class = UserSerializer 
+    queryset = get_user_model().objects.prefetch_related('transactions')
+    serializer_class = UserSerializer
