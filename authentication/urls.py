@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from .views import RegisterView, UserListAPIView, UserUpdateAPIView 
+from .views import RegisterView, UserListAPIView, UserUpdateAPIView, UserDestroyAPIView 
 
 urlpatterns = [
     path("authentication/register/", RegisterView.as_view(), name="register"),
@@ -28,5 +28,6 @@ urlpatterns = [
     ),
     
     path('users/all/', UserListAPIView.as_view(), name='users_all'),
-    path('user/update/<int:pk>/', UserUpdateAPIView.as_view(), name='update_user')
+    path('user/update/<int:pk>/', UserUpdateAPIView.as_view(), name='update_user'),
+    path('user/del/<int:pk>/', UserDestroyAPIView.as_view(), name='del_user')
 ]
