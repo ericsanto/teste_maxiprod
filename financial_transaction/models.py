@@ -22,6 +22,12 @@ MATHODS_PAYMENT = (
         ('CARTÃO', 'CARTÃO'),
         )
 
+
+TYPE_EXPENSE = (
+        ('DESPEZA', 'DESPEZA'),
+        ('RECEITA', 'RECEITA'),
+        )
+
 class FinancialTransaction(models.Model):
     user = models.ForeignKey(UserCustom, on_delete=models.CASCADE, blank=True)
     methods_payment = models.CharField(choices=MATHODS_PAYMENT, max_length=255)
@@ -29,4 +35,5 @@ class FinancialTransaction(models.Model):
     expense = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
     description = models.CharField(max_length=255, blank=True)
-
+    type_expense = models.CharField(choices=TYPE_EXPENSE, max_length=255)
+    
