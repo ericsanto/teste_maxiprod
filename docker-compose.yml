@@ -13,6 +13,9 @@ services:
       POSTGRES_PASSWORD: teste
       POSTGRES_DB: teste
     volumes:
-      - /var/lib/postgresql:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+volumes:
+  postgres_data: {}
