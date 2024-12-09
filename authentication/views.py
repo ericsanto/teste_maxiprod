@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionDenied
 from django.db.models import query
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.compat import requests
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RegisterSerializer, UserSerializer
 
@@ -16,7 +17,7 @@ class UserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+class UserUpdateAPIView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = get_user_model()
     serializer_class = UserSerializer
@@ -31,4 +32,16 @@ class UserUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
 
+class UserDestroyAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = get_user_model()
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        obj = super().get_object()
+
+        if obj.id != self.request.user.id:
+            raise PermissionDenied('Você não tem permissão para alterar outro usuário')
+
+        return obj
 
