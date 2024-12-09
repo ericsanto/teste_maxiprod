@@ -56,10 +56,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     balance = serializers.SerializerMethodField() #utilizado quando desejo enviar algo que nao esta diretamente no modelo
+    total_revenue = serializers.SerializerMethodField()
+    total_expense = serializers.SerializerMethodField()
 
     class Meta:
         model = UserCustom
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'date_of_birth', 'age', 'balance')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'date_of_birth', 'age', 'total_revenue', 'total_expense', 'balance')
     
     def get_balance(self, obj):
         # Filtrar todas as transações do usuário
@@ -69,5 +71,25 @@ class UserSerializer(serializers.ModelSerializer):
         sub_expense = transactions.filter(type_expense='DESPESA').aggregate(Sum('expense'))['expense__sum'] or 0
         
         balance = sum_expense - sub_expense
-
         return balance
+
+    def get_total_revenue(self, obj):
+        
+        transactions = obj.transactions.all()
+
+        sum_expense = transactions.filter(type_expense='RECEITA').aggregate(Sum('expense'))['expense__sum'] or 0
+
+        total_revenue = sum_expense
+
+        return total_revenue
+
+
+    def get_total_expense(self, obj):
+        
+        transactions = obj.transactions.all()
+
+        sum_expense = transactions.filter(type_expense='DESPESA').aggregate(Sum('expense'))['expense__sum'] or 0
+
+        total_expense = sum_expense
+
+        return total_expense
