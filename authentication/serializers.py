@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from rest_framework.schemas.coreapi import models
 from django.utils.timezone import now
 from .models import UserCustom
+from financial_transaction.models import FinancialTransaction
 from datetime import date, datetime
+from django.db.models import Sum
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -50,8 +52,22 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
+    from rest_framework import serializers
+
 class UserSerializer(serializers.ModelSerializer):
-    
+    balance = serializers.SerializerMethodField() #utilizado quando desejo enviar algo que nao esta diretamente no modelo
+
     class Meta:
-        model = UserCustom 
-        fields = ('id','username', 'first_name', 'last_name', 'email', 'date_of_birth', 'age')
+        model = UserCustom
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'date_of_birth', 'age', 'balance')
+    
+    def get_balance(self, obj):
+        # Filtrar todas as transações do usuário
+        transactions = obj.transactions.all()
+
+        sum_expense = transactions.filter(type_expense='RECEITA').aggregate(Sum('expense'))['expense__sum'] or 0
+        sub_expense = transactions.filter(type_expense='DESPESA').aggregate(Sum('expense'))['expense__sum'] or 0
+        
+        balance = sum_expense - sub_expense
+
+        return balance
